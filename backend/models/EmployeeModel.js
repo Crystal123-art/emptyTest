@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 
 const employeeSchema = new mongoose.Schema({
@@ -7,7 +6,15 @@ const employeeSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  empName: {
+  empFirstName: {
+    type: String,
+    required: true,
+  },
+  empMiddleName: {
+    type: String,
+    required: true,
+  },
+  empLastName: {
     type: String,
     required: true,
   },
@@ -20,7 +27,16 @@ const employeeSchema = new mongoose.Schema({
     ref: 'Team',
     required: true,
   },
+});
 
+//pre-remove hook
+employeeSchema.pre('remove', async function(next) {
+  try {
+    await mongoose.model('LeaveRequest').deleteMany({ empId: this._id });
+    next();
+  } catch (err) {
+    next(err);
+  }
 });
 
 const Employee = mongoose.model('Employee', employeeSchema);

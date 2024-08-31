@@ -4,28 +4,29 @@ const cors = require("cors"); // CORS middleware to allow requests from differen
 require("dotenv").config(); // dotenv is used to load environment variables from a .env file.
 
 const teamRoutes = require('./routes/TeamRoutes'); //Added team routes
-const roleRoutes = require('./routes/RoleRoutes'); 
 const employeeRoutes = require('./routes/EmployeeRoutes');
 const UserRoutes = require('./routes/UserRoutes');
 const LeaveRequestRoutes = require('./routes/LeaveRequestRoutes');
+// const authRoutes = require('./routes/AuthRoutes');
 
 // Create an instance of Express
 const app = express();
-const PORT = process.env.PORT || 5000; // Set the port from environment variables or default to 5000.
+const PORT = process.env.PORT || 5000; // Set the p ort from environment variables or default to 5000.
 
 // Middleware
 app.use(express.json()); // Middleware to parse JSON requests.
 app.use(cors()); // Middleware to handle Cross-Origin Resource Sharing (CORS).
 
+//to test the server    
 // app.get("/", (req,res)=> {
 //     res.send("Server is working fine");
 // });
 
 app.use('/api', teamRoutes); // Use team routes
-app.use('/api', roleRoutes); // use role routes
 app.use('/api', employeeRoutes);
 app.use('/api', UserRoutes);
 app.use('/api', LeaveRequestRoutes);
+// app.use('/api/auth', authRoutes);
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
@@ -39,6 +40,7 @@ mongoose.connect(process.env.MONGO_URI)
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}...`); // Log the port the server is running on.
 });
+
 
 
 //api.use() :  For example: app.use('/apple', ...) will match “/apple”, “/apple/images”, “/apple/images/news”, and so on.

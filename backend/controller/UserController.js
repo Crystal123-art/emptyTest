@@ -1,31 +1,33 @@
+const { ConnectionReadyEvent } = require('mongodb');
 const User = require('../models/UserModel');
 
 //CREATE user
 const createUser = async (req, res) => {
     try {
-        const { empId, email, password, location, gender, roleId } = req.body;
-
+        const { empId, email, password, location, contact, gender, role } = req.body;
+        console.log("Contact",contact)
         const user = new User({
-            empId,
+            empId, 
             email, 
             password, 
-            location, 
+            location,
+            contact, 
             gender, 
-            roleId,
+            role,
         });
 
         await user.save();
 
         res.status(201).json({ message: 'User created successfully', user });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: err.message});
     }
 };
 
 // GET all users
 const getAllUsers = async (req, res) => {
     try {
-      const users = await User.find().populate('empId roleId');
+      const users = await User.find().populate('empId');
       res.status(200).json(users);
     } catch (err) {
       res.status(500).json({ error: err.message });
@@ -35,7 +37,7 @@ const getAllUsers = async (req, res) => {
   // GET user by Id
   const getUserById = async (req, res) => {
     try {
-      const user = await User.findById(req.params.id).populate('empId roleId');
+      const user = await User.findById(req.params.id).populate('empId');
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }

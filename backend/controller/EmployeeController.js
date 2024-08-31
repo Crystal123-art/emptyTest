@@ -3,11 +3,13 @@ const Employee = require('../models/EmployeeModel');
 //CREATE employee
 const createEmployee = async (req, res) => {
     try {
-        const { empId, empName, designation, teamId } = req.body;
+        const { empId, empFirstName,empMiddleName,empLastName,  designation, teamId } = req.body;
 
         const employee = new Employee({
             empId,
-            empName,
+            empFirstName,
+            empMiddleName,
+            empLastName,
             designation,
             teamId,
         });
@@ -44,16 +46,13 @@ const getEmployeeById = async (req, res) => {
   };
 
   //UPDATE employee
+  
   const updateEmployee = async (req, res) => {
     try {
-      const { empId } = req.params;
-      const updatedData = req.body;
+      const EmpId = req.params.id; // Get the Emp ID from the URL parameters
+      const updatedData = req.body; // Get the updated data from the request body
   
-      const updatedEmployee = await Employee.findOneAndUpdate(
-        { empId }, // Find the employee by empId
-        updatedData,
-        { new: true, runValidators: true } // Return the updated document
-      );
+      const updatedEmployee = await Employee.findByIdAndUpdate(EmpId, updatedData, { new: true });
   
       if (!updatedEmployee) {
         return res.status(404).json({ message: 'Employee not found' });
@@ -81,5 +80,7 @@ const getEmployeeById = async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   };
+
+  
 
 module.exports = { createEmployee, getAllEmployees, getEmployeeById, updateEmployee, deleteEmployee};

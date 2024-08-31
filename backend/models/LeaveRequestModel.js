@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 const { LEAVE_STATUS } = require('../constants');
 
@@ -33,6 +32,14 @@ const leaveRequestSchema = new mongoose.Schema({
     },
 });
 
-const LeaveRequest = mongoose.model('LeaveRequest', leaveRequestSchema);
+  //pre-validate hook for maintaining data consistency
+  leaveRequestSchema.pre('validate', function(next) {
+    if (this.fromDate > this.toDate) {
+      return next(new Error('From date must be before to date'));
+    }
+    next();
+  });
+  
 
+const LeaveRequest = mongoose.model('LeaveRequest', leaveRequestSchema);
 module.exports = LeaveRequest;
